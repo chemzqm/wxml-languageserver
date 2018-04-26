@@ -1,0 +1,4 @@
+*.map
+src
+lib/test
+gulpfile.js

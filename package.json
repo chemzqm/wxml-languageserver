@@ -1,0 +1,46 @@
+{
+  "name": "wxml-langserver",
+  "version": "1.0.1",
+  "description": "wxml language server implementation in nodejs",
+  "main": "index.js",
+  "author": "Qiming Zhao <chemzqm@gmail.com>",
+  "license": "MIT",
+  "bin": {
+    "wxml-langserver": "./bin/wxml-langserver"
+  },
+  "scripts": {
+    "clean": "rimraf lib",
+    "test": "mocha --require",
+    "lint": "tslint -c tslint.json -p .",
+    "build": "tsc",
+    "watch": "tsc -w"
+  },
+  "devDependencies": {
+    "@chemzqm/tsconfig": "^0.0.1",
+    "@chemzqm/tslint-config": "1.0.11",
+    "@minapp/generator": "^1.0.3",
+    "@types/chai": "^4.1.3",
+    "@types/chai-as-promised": "^7.1.0",
+    "@types/mocha": "^5.2.0",
+    "@types/node": "^9.6.6",
+    "chai": "^4.1.2",
+    "chai-as-promised": "^7.1.1",
+    "glob": "^7.1.2",
+    "gulp": "^3.9.1",
+    "gulp-flatten": "^0.4.0",
+    "gulp-sequence": "^1.0.0",
+    "gulp-shell": "^0.6.5",
+    "mocha": "^5.1.1",
+    "prettier": "^1.12.1",
+    "rimraf": "^2.6.2",
+    "source-map-support": "^0.5.4",
+    "tslint": "^5.9.1",
+    "tslint-language-service": "^0.9.9",
+    "turndown": "^4.0.1"
+  },
+  "dependencies": {
+    "typescript": "^2.8.3",
+    "vscode-languageserver": "^4.1.2",
+    "vscode-languageserver-types": "^3.7.1"
+  }
+}
