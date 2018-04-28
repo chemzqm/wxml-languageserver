@@ -71,7 +71,7 @@ export default function doComplete(
       result.items.push({
         label: tag,
         kind: CompletionItemKind.Property,
-        documentation: info ? info.desc : '',
+        documentation: info && info.desc ? info.desc.join('\n') : '',
         textEdit: TextEdit.replace(range, tag),
         insertTextFormat: InsertTextFormat.PlainText,
       })
@@ -149,7 +149,7 @@ export default function doComplete(
       result.items.push({
         label: '/' + tag,
         kind: CompletionItemKind.Property,
-        documentation: info ? info.desc : '',
+        documentation: info && info.desc ? info.desc.join('\n') : '',
         filterText: '/' + tag + closeTag,
         textEdit: TextEdit.replace(range, '/' + tag + closeTag),
         insertTextFormat: InsertTextFormat.PlainText,
@@ -266,7 +266,7 @@ export default function doComplete(
         label: value,
         filterText: insertText,
         kind: CompletionItemKind.Enum,
-        documentation: info ? info.desc : '',
+        documentation: info && info.desc ? info.desc : '',
         textEdit: TextEdit.replace(range, insertText),
         insertTextFormat: InsertTextFormat.PlainText,
       })

@@ -75,7 +75,7 @@ export interface WXMLAttribute {
 
 export class WXMLTagSpecification {
   public name: string
-  public desc: string
+  public desc?: string[]
   public attrs: WXMLAttribute[] = []
   public tips?: string[]
   public demoImages?: string[]
@@ -114,7 +114,7 @@ export const WXML_TAGS = (() => {
   }
   TAGS.wxs = new WXMLTagSpecification({
     name: 'wxs',
-    desc: 'WeiXin Script',
+    desc: ['WeiXin Script'],
     docLink: 'https://developers.weixin.qq.com/miniprogram/dev/framework/view/wxs/index.html',
     tips: ['WXS（WeiXin Script）是小程序的一套脚本语言，结合 WXML，可以构建出页面的结构。'],
     attrs: [{
