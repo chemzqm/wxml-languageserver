@@ -29,6 +29,10 @@
 * picker 没有正确处理, 应该根据 mode 进行验证和补全
 * movable-view 属性补全
 
+## TODO
+
+* find refenences
+
 ## 感谢
 
 本项目使用了 [qiu8310/minapp](https://github.com/qiu8310/minapp) 提供的
