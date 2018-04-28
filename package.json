@@ -1,6 +1,6 @@
 {
   "name": "wxml-langserver",
-  "version": "1.0.3",
+  "version": "1.0.4",
   "description": "wxml language server implementation in nodejs",
   "main": "index.js",
   "author": "Qiming Zhao <chemzqm@gmail.com>",
