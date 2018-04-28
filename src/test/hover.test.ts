@@ -57,8 +57,12 @@ suite('HTML Hover', () => {
     assertHover('<view></view>|', void 0, void 0)
   })
 
-  test('Attribute hover', (): void => {
+  test('Attribute hover #1', (): void => {
     assertHover('<text s|pace=""></view>', 'space', 6)
     assertHover('<text space=|""></view>', void 0, void 0)
+  })
+
+  test('Attribute hover #2', (): void => {
+    assertHover('<text selecta|ble></view>', 'text', 6)
   })
 })

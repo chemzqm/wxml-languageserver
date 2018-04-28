@@ -93,6 +93,13 @@ export default function doHover(
         },
         range,
       }
+    } else {
+      // show tag hover
+      let start = parseInt(parts[1], 10)
+      return getTagHover(node.tag, {
+        start: document.positionAt(start),
+        end: document.positionAt(start + parts[0].length)
+      })
     }
   }
 
