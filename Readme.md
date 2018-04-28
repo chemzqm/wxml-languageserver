@@ -26,10 +26,13 @@
 
 ## 已知问题
 
-* picker 没有正确处理
+* picker 没有正确处理, 应该根据 mode 进行验证和补全
 * movable-view 属性补全
 
 ## 感谢
+
+本项目使用了 [qiu8310/minapp](https://github.com/qiu8310/minapp) 提供的
+component.json 以及 [@miniapp/generator](https://github.com/qiu8310/minapp/tree/master/packages/minapp-generator)
 
 本项目使用/参考了以下项目的部分代码：
 
