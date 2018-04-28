@@ -9,6 +9,34 @@
 * 支持自动补全，包含标签名，属性，以及可枚举属性值
 * 验证 import 和 include 中 src 定义的文件路径
 
+## 使用方法
+
+使用 npm 安装到全局：
+
+    npm install -g wxml-langserver
+
+以 vim/neovim 为例， 安装 [autozimu/LanguageClient-neovim](https://github.com/autozimu/LanguageClient-neovim) 插件：
+
+```vim
+Plug 'autozimu/LanguageClient-neovim', {
+    \ 'branch': 'next',
+    \ 'do': 'bash install.sh',
+    \ }
+
+Plug 'Shougo/deoplete.nvim', { 'do': ':UpdateRemotePlugins' }
+```
+
+配置：
+
+```vim
+let g:LanguageClient_serverCommands = {
+    \ 'wxml': ['wxml-langserver'],
+    \ }
+
+nnoremap <silent> K :call LanguageClient#textDocument_hover()<CR>
+nnoremap <silent> gd :call LanguageClient#textDocument_definition()<CR>
+```
+
 ## 本地使用
 
 * clone 整个项目
@@ -27,11 +55,6 @@
 ## 已知问题
 
 * picker 没有正确处理, 应该根据 mode 进行验证和补全
-* movable-view 属性补全
-
-## TODO
-
-* find refenences
 
 ## 感谢
 
