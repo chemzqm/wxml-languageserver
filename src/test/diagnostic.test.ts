@@ -19,6 +19,7 @@ suite('WXML Diagnostic', () => {
     let document = TextDocument.create('test://test/test.html', 'html', 0, value)
     let wxmlDoc = parse(document.getText())
     let results = doDiagnostic(document, wxmlDoc)
+    console.log(results)
 
     let i = 0
     assert.equal(results.length, expectedErrorMessages.length)
@@ -51,38 +52,26 @@ suite('WXML Diagnostic', () => {
   })
 
   test('Expression required #1', () => {
-    assertDiagnostic('<view wx:if=""></view>', ['Expression required for "wx:if"'])
+    assertDiagnostic('<view bindtap=""></view>', ['Value required for attribute "bindtap"'])
   })
 
   test('Expression required #2', () => {
-    assertDiagnostic('<view wx:if></view>', ['Expression required for "wx:if"'])
+    assertDiagnostic('<view bindtap></view>', ['Value required for attribute "bindtap"'])
   })
 
   test('Expression required #3', () => {
-    assertDiagnostic('<view wx:if="true"></view>', ['Expression required for "wx:if"'])
+    assertDiagnostic('<view wx:if="True"></view>', ['Invalid value for boolean attribute "wx:if"'])
   })
 
   test('Handler required #1', () => {
-    assertDiagnostic('<view bindtap></view>', ['Handler required for "bindtap"'])
-  })
-
-  test('Handler required #2', () => {
-    assertDiagnostic('<input bindfocus=""/>', ['Handler required for "bindfocus"'])
-  })
-
-  test('Handler required #3', () => {
-    assertDiagnostic('<view bindtap="{{ontap}}"></view>', ['Handler required for "bindtap"'])
-  })
-
-  test('Invalid boolean attribute #1', () => {
-    assertDiagnostic('<view hidden="F"></view>', ['Invalid value for boolean attribute "hidden"'])
+    assertDiagnostic('<view bindtap></view>', ['Value required for attribute "bindtap"'])
   })
 
   test('Invalid boolean attribute #2', () => {
     assertDiagnostic('<scroll-view scroll-x="False"></scroll-view>', ['Invalid value for boolean attribute "scroll-x"'])
   })
 
-  test('Value required', () => {
+  test('Value required for enum', () => {
     assertDiagnostic('<text space></text>', ['Value required for attribute "space"'])
   })
 
@@ -95,7 +84,7 @@ suite('WXML Diagnostic', () => {
   })
 
   test('Express required for wx:for', () => {
-    assertDiagnostic('<view wx:for="abc"></view>', ['Expression required for "wx:for"'])
+    assertDiagnostic('<view wx:for="abc"></view>', ['Expression required for attribute "wx:for"'])
   })
 
   test('Value required for wx:key', () => {

@@ -166,7 +166,11 @@ export function getWXMLTagProvider(): IWXMLTagProvider {
         collector(handler, 'event')
       }
       for (let attr of logicAttributes) {
-        collector(attr, 'logic')
+        if (['wx:if', 'wx:elif'].indexOf(attr) !== -1) {
+          collector(attr, 'boolean')
+        } else {
+          collector(attr, 'logic')
+        }
       }
       for (let attr of iterateAttributes) {
         collector(attr, 'iterate')

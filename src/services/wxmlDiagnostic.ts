@@ -19,6 +19,15 @@ interface AttributeItem {
   info?: WXMLAttribute,
 }
 
+function isDynamicValue(value: string):boolean {
+  return /^\{\{.+\}\}$/.test(value)
+}
+
+function isNumberValue(value: string):boolean {
+  if (!value) return true
+  return /^\d+(?:\.\d+)?$/.test(value)
+}
+
 export default function doDiagnostic(document: TextDocument, wxmlDocument: WXMLDocument): Diagnostic[] {
   let errors = wxmlDocument.errors
   let result: Diagnostic[] = []
@@ -129,65 +138,48 @@ export default function doDiagnostic(document: TextDocument, wxmlDocument: WXMLD
           }
           continue
         }
-        let type = allowedAttrs[attr].type
-        if (type === 'logic') {
-          if (attr != 'wx:else' && (!value || !/^\{\{.+\}\}$/.test(value))) {
+        if (attr === 'wx:else') {
+          if (value) {
             result.push({
               range:{
                 start: document.positionAt(offset),
                 end: document.positionAt(offset + attr.length)
               },
-              severity: DiagnosticSeverity.Error,
-              message: `Expression required for "${attr}"`
+              severity: DiagnosticSeverity.Warning,
+              message: `Unnecessary value for "${attr}"`
             })
           }
-        } else if (type === 'iterate') {
-          if (attr === 'wx:for') {
-            if (!value || !/^\{\{/.test(value)) {
+          continue
+        }
+        if (value && isDynamicValue(value)) continue
+        let type = allowedAttrs[attr].type
+        switch (type) {
+          case 'logic':
+          case 'iterate':
+          case 'event':
+          case 'function':
+            if (!value) {
               result.push({
-                range: {
+                range:{
                   start: document.positionAt(offset),
                   end: document.positionAt(offset + attr.length)
                 },
                 severity: DiagnosticSeverity.Error,
-                message: `Expression required for "wx:for"`
+                message: `Value required for attribute "${attr}"`
+              })
+            } else if (['wx:for', 'wx:for-items'].indexOf(attr) !== -1) {
+              result.push({
+                range:{
+                  start: document.positionAt(offset),
+                  end: document.positionAt(offset + attr.length)
+                },
+                severity: DiagnosticSeverity.Error,
+                message: `Expression required for attribute "${attr}"`
               })
             }
-          } else if (!value) {
-            let valueOffset = node.getValueOffset(attr) || offset
-            result.push({
-              range:{
-                start: document.positionAt(valueOffset),
-                end: document.positionAt(valueOffset + 1)
-              },
-              severity: DiagnosticSeverity.Error,
-              message: `Value required for attribute "${attr}"`
-            })
-          }
-        } else if (type === 'event' || type === 'function') {
-          if (!value || /^\{/.test(value)) {
-            let valueOffset = node.getValueOffset(attr) || offset
-            value = value || ''
-            result.push({
-              range: {
-                start: document.positionAt(valueOffset),
-                end: document.positionAt(valueOffset + (value.length || 1))
-              },
-              severity: DiagnosticSeverity.Error,
-              message: `Handler required for "${attr}"`
-            })
-          }
-        } else {
-          // checke values
-          let allowedValues: string[] = []
-          provider.collectValues(tag, attr, value => {
-            if (allowedValues.indexOf(value) === -1) {
-              allowedValues.push(value)
-            }
-          })
-          if (type === 'boolean') {
-            if (value && ['true', 'false'].indexOf(value) === -1
-              && !/^\{\{.+\}\}$/.test(value)) {
+            break
+          case 'boolean':
+            if (value && ['true', 'false'].indexOf(value) === -1) {
               let valueOffset = node.getValueOffset(attr) || offset
               value = value || ''
               result.push({
@@ -199,12 +191,32 @@ export default function doDiagnostic(document: TextDocument, wxmlDocument: WXMLD
                 message: `Invalid value for boolean attribute "${attr}"`
               })
             }
-          } else {
+            break
+          case 'number':
+            if (value && !isNumberValue(value)) {
+              let valueOffset = node.getValueOffset(attr) || offset
+              result.push({
+                range: {
+                  start: document.positionAt(valueOffset),
+                  end: document.positionAt(valueOffset + value.length)
+                },
+                severity: DiagnosticSeverity.Error,
+                message: `Invalid value for number attribute "${attr}"`
+              })
+            }
+            break
+          default: {
+            // checke values
+            let allowedValues: string[] = []
+            provider.collectValues(tag, attr, value => {
+              if (allowedValues.indexOf(value) === -1) {
+                allowedValues.push(value)
+              }
+            })
             let info = allowedAttrs[attr].info
             let defaultValue = info ? info.defaultValue : null
             if (defaultValue === '无' || defaultValue === 'false') defaultValue = null
-            if (!value) {
-              if (defaultValue) continue
+            if (!defaultValue && !value) {
               let valueOffset = node.getValueOffset(attr) || offset
               result.push({
                 range: {
@@ -214,7 +226,8 @@ export default function doDiagnostic(document: TextDocument, wxmlDocument: WXMLD
                 severity: DiagnosticSeverity.Error,
                 message: `Value required for attribute "${attr}"`
               })
-            } else if (allowedValues.length && allowedValues.indexOf(value) === -1) {
+            }
+            if (value && allowedValues.length && allowedValues.indexOf(value) === -1) {
               let valueOffset = node.getValueOffset(attr) || offset
               result.push({
                 range: {
@@ -224,19 +237,6 @@ export default function doDiagnostic(document: TextDocument, wxmlDocument: WXMLD
                 severity: DiagnosticSeverity.Error,
                 message: `Invalid value for enum attribute "${attr}"`
               })
-            } else if (type === 'number') {
-              let num = parseInt(value, 10)
-              if (num.toString() !== value) {
-                let valueOffset = node.getValueOffset(attr) || offset
-                result.push({
-                  range: {
-                    start: document.positionAt(valueOffset),
-                    end: document.positionAt(valueOffset + value.length)
-                  },
-                  severity: DiagnosticSeverity.Error,
-                  message: `Invalid value for number attribute "${attr}"`
-                })
-              }
             }
           }
         }
