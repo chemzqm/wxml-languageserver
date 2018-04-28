@@ -37,6 +37,17 @@ export function isEmptyElement(e: string): boolean {
   )
 }
 
+function getSubAttribute(spec: WXMLTagSpecification): WXMLAttribute | null {
+  let attrs = spec.attrs
+  if (!attrs) return null
+  for (let attr of attrs) {
+    if (attr.hasOwnProperty('subAttrs')) {
+      return attr
+    }
+  }
+  return null
+}
+
 export interface IWXMLTagProvider {
   getId(): string
   isApplicable(languageId: string): boolean
@@ -71,6 +82,12 @@ export interface WXMLAttribute {
   desc?: string[]
   defaultValue?: string
   since?: string
+  subAttrs?: SubAttribute[]
+}
+
+export interface SubAttribute {
+  equal: string
+  attrs: WXMLAttribute[]
 }
 
 export class WXMLTagSpecification {
@@ -80,6 +97,7 @@ export class WXMLTagSpecification {
   public tips?: string[]
   public demoImages?: string[]
   public docLink?: string
+  public subAttr?: boolean
   [index: string]: any
   constructor(config: WXMLTagSpecification) {
     for (let key of Object.keys(config)) {
@@ -95,12 +113,35 @@ interface IValueSets {
   [tag: string]: string[]
 }
 
+export function isSubAttrTag(tag: string): boolean {
+  for (let name of Object.keys(WXML_TAGS)) {
+    if (name === tag) {
+      return WXML_TAGS[name].subAttr === true
+    }
+  }
+  return false
+}
+
 export const WXML_TAGS = (() => {
   let componentConfig = fs.readFileSync(path.resolve(__dirname, '../../components.json'), 'utf8')
   let componentList: WXMLTagSpecification[] = JSON.parse(componentConfig)
   let TAGS: ITagSet = {}
   for (let item of componentList) {
     TAGS[item.name] = new WXMLTagSpecification(item)
+    let subAttr = getSubAttribute(item)
+    if (subAttr) {
+      TAGS[item.name].subAttr = true
+      let attrs = subAttr.subAttrs!
+      for (let attr of attrs) {
+        let name = `$${item.name} ${attr.equal}`
+        let spec = {
+          name,
+          attrs: attr.attrs,
+        }
+        TAGS[name] = new WXMLTagSpecification(spec)
+      }
+    }
+
     if (item.name === 'input' || item.name === 'textarea') {
       let spec = TAGS[item.name]
       spec.attrs.push({
@@ -197,7 +238,10 @@ function collectTagsDefault(
   tagSet: ITagSet,
 ): void {
   for (let tag of Object.keys(tagSet)) {
-    collector(tag, tagSet[tag])
+    // tag of sub attr
+    if (tag[0] !== '$') {
+      collector(tag, tagSet[tag])
+    }
   }
 }
 

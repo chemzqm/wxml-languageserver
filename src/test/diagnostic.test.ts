@@ -19,7 +19,6 @@ suite('WXML Diagnostic', () => {
     let document = TextDocument.create('test://test/test.html', 'html', 0, value)
     let wxmlDoc = parse(document.getText())
     let results = doDiagnostic(document, wxmlDoc)
-    console.log(results)
 
     let i = 0
     assert.equal(results.length, expectedErrorMessages.length)

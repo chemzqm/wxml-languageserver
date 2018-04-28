@@ -10,7 +10,11 @@ import {
   WXMLDocument,
   Node
 } from '../parser/wxmlParser'
-import {getWXMLTagProvider, EMPTY_ELEMENTS, WXMLAttribute} from '../parser/wxmlTags'
+import {
+  isSubAttrTag,
+  getWXMLTagProvider,
+  EMPTY_ELEMENTS,
+  WXMLAttribute} from '../parser/wxmlTags'
 import path = require('path')
 import fs = require('fs')
 
@@ -120,6 +124,18 @@ export default function doDiagnostic(document: TextDocument, wxmlDocument: WXMLD
           info
         }
       })
+      if (isSubAttrTag(tag)) {
+        let mode = node.getAttributeValue('mode')
+        if (mode) {
+          provider.collectAttributes(`$${tag} ${mode}`, (name, type, info) => {
+            allowedAttrs[name] = {
+              type: type || 'string',
+              info
+            }
+          })
+        }
+      }
+
       let allowedAttrsNames = Object.keys(allowedAttrs)
       for (let attr of attributes) {
         let value = node.getAttributeValue(attr)

@@ -52,10 +52,6 @@ nnoremap <silent> gd :call LanguageClient#textDocument_definition()<CR>
 * 执行 `gulp` 生成本地 markdown 文档
 * 执行 `./bin/wxml-langserver` 运行服务
 
-## 已知问题
-
-* picker 没有正确处理, 应该根据 mode 进行验证和补全
-
 ## 感谢
 
 本项目使用了 [qiu8310/minapp](https://github.com/qiu8310/minapp) 提供的

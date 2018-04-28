@@ -16,7 +16,10 @@ import {
 } from 'vscode-languageserver-types'
 import {createScanner} from '../parser/wxmlScanner'
 import {isEmptyElement, WXMLAttribute, EnumItem} from '../parser/wxmlTags'
-import {getWXMLTagProvider} from '../parser/wxmlTags'
+import {
+  getWXMLTagProvider,
+  isSubAttrTag
+} from '../parser/wxmlTags'
 import {
   ScannerState,
   TokenType,
@@ -185,52 +188,53 @@ export default function doComplete(
   }
 
   function collectAttributeNameSuggestions(
+    tag: string,
     nameStart: number,
     nameEnd: number = offset,
   ): CompletionList {
-    let replaceEnd = offset
-    while (replaceEnd < nameEnd && text[replaceEnd] !== '<') {
-      // < is a valid attribute name character, but we rather assume the attribute name ends. See #23236.
-      replaceEnd++
-    }
-    let range = getReplaceRange(nameStart, replaceEnd)
-    let value = isFollowedBy(
-      text,
-      nameEnd,
-      ScannerState.AfterAttributeName,
-      TokenType.DelimiterAssign,
-    ) ? '' : '="$1"'
-    let tag = currentTag.toLowerCase()
-    let seenAttributes = Object.create(null)
-
-    provider.collectAttributes(tag, (attribute, type?: string, info?: WXMLAttribute) => {
-      if (seenAttributes[attribute]) return
-      seenAttributes[attribute] = true
-      if (/^(bind|catch):/.test(attribute)) {
-        seenAttributes[attribute.replace(':', '')] = true
+    if (!isSubAttrTag(tag)) {
+      let replaceEnd = offset
+      while (replaceEnd < nameEnd && text[replaceEnd] !== '<') {
+        // < is a valid attribute name character, but we rather assume the attribute name ends. See #23236.
+        replaceEnd++
+      }
+      let range = getReplaceRange(nameStart, replaceEnd)
+      let value = isFollowedBy(
+        text,
+        nameEnd,
+        ScannerState.AfterAttributeName,
+        TokenType.DelimiterAssign,
+      ) ? '' : '="$1"'
+      let seenAttributes = Object.create(null)
+      for (let attr of node.attributeNames) {
+        seenAttributes[attr] = true
       }
 
-      let codeSnippet = attribute
-      let command
-      if (type !== 'boolean' && value.length) {
-        codeSnippet = codeSnippet + value
-        if (type) {
-          command = {
-            title: 'Suggest',
-            command: 'editor.action.triggerSuggest',
-          }
+      provider.collectAttributes(tag, (attribute, type?: string, info?: WXMLAttribute):void => {
+        if (seenAttributes[attribute]) return
+        seenAttributes[attribute] = true
+        if (/^(bind|catch):/.test(attribute)) {
+          seenAttributes[attribute.replace(':', '')] = true
         }
-      }
-      result.items.push({
-        label: attribute,
-        documentation: info && info.desc ? info.desc.join('\n') : '',
-        kind: CompletionItemKind.Property,
-        textEdit: TextEdit.replace(range, codeSnippet),
-        insertTextFormat: InsertTextFormat.Snippet,
-        command,
+        if (/^\$/.test(tag) && /:/.test(attribute)) return
+        let codeSnippet = attribute
+        if (type !== 'boolean' && value.length) {
+          codeSnippet = codeSnippet + value
+        }
+        result.items.push({
+          label: attribute,
+          documentation: info && info.desc ? info.desc.join('\n') : '',
+          kind: CompletionItemKind.Property,
+          textEdit: TextEdit.replace(range, codeSnippet),
+          insertTextFormat: InsertTextFormat.Snippet
+        })
       })
-    })
-    return result
+      return result
+    } else {
+      let mode = node.getAttributeValue('mode')
+      let name = mode ? `$${tag} ${mode}` : tag
+      return collectAttributeNameSuggestions(name, nameStart, nameEnd)
+    }
   }
 
   function collectAttributeValueSuggestions(
@@ -340,6 +344,7 @@ export default function doComplete(
           offset <= scanner.getTokenEnd()
         ) {
           return collectAttributeNameSuggestions(
+            currentTag.toLowerCase(),
             scanner.getTokenOffset(),
             scanner.getTokenEnd(),
           )
@@ -372,7 +377,7 @@ export default function doComplete(
               return collectTagSuggestions(startPos, endTagPos)
             case ScannerState.WithinTag:
             case ScannerState.AfterAttributeName:
-              return collectAttributeNameSuggestions(scanner.getTokenEnd())
+              return collectAttributeNameSuggestions(currentTag.toLowerCase(), scanner.getTokenEnd())
             case ScannerState.BeforeAttributeValue:
               return collectAttributeValueSuggestions(scanner.getTokenEnd())
             case ScannerState.AfterOpeningEndTag:

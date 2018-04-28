@@ -123,7 +123,7 @@ suite('HTML Completion', () => {
       ],
     })
 
-    testCompletionFor('<text s|pace', {
+    testCompletionFor('<text s|pa', {
       items: [
         {label: 'selectable', resultText: '<text selectable'},
         {label: 'space', resultText: '<text space="$1"'}
@@ -143,6 +143,14 @@ suite('HTML Completion', () => {
       items: [
         {label: 'scaleToFill', resultText: '<image mode="scaleToFill'},
         {label: 'aspectFit', resultText: '<image mode="aspectFit'}
+      ],
+    })
+  })
+
+  test('Completion picker', (): void => {
+    testCompletionFor('<picker mode="region" |', {
+      items: [
+        {label: 'custom-item', resultText: '<picker mode="region" custom-item="$1"'}
       ],
     })
   })
