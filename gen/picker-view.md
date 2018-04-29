@@ -1,4 +1,4 @@
-<!-- https://mp.weixin.qq.com/debug/wxadoc/dev/component/picker-view.html -->
+<!-- https://developers.weixin.qq.com/miniprogram/dev/component/picker-view.html -->
 
 #### picker-view
 
@@ -77,7 +77,7 @@
     })
     
 
-![picker_view](https://mp.weixin.qq.com/debug/wxadoc/dev/image/picker_view.png?t=2018424)
+![picker_view](https://mp.weixin.qq.com/debug/wxadoc/dev/image/picker_view.png?t=2018428)
 
 ##### Tips：
 

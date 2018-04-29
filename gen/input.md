@@ -1,4 +1,4 @@
-<!-- https://mp.weixin.qq.com/debug/wxadoc/dev/component/input.html -->
+<!-- https://developers.weixin.qq.com/miniprogram/dev/component/input.html -->
 
 #### input
 
@@ -126,7 +126,7 @@
     })
     
 
-![input](https://mp.weixin.qq.com/debug/wxadoc/dev/image/pic/input.png?t=2018424)
+![input](https://mp.weixin.qq.com/debug/wxadoc/dev/image/pic/input.png?t=2018428)
 
 ##### Bug & Tip：
 

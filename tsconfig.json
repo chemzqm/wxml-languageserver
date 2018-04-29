@@ -1,5 +1,5 @@
 {
-  "extends": "./node_modules/@chemzqm//tsconfig/tsconfig.json",
+  "extends": "./node_modules/@chemzqm/tsconfig/tsconfig.json",
   "compilerOptions": {
     "outDir": "lib",
     "target": "es2016",
@@ -13,6 +13,8 @@
     "strictPropertyInitialization": false,
     "plugins": []
   },
-  "include": ["src/**/*.ts"]
+  "include": [
+    "src/**/*.ts"
+  ]
 }
 

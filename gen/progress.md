@@ -1,4 +1,4 @@
-<!-- https://mp.weixin.qq.com/debug/wxadoc/dev/component/progress.html -->
+<!-- https://developers.weixin.qq.com/miniprogram/dev/component/progress.html -->
 
 #### progress
 
@@ -25,4 +25,4 @@
     <progress percent="80" active />
     
 
-![progress](https://mp.weixin.qq.com/debug/wxadoc/dev/image/pic/progress.png?t=2018424)
+![progress](https://mp.weixin.qq.com/debug/wxadoc/dev/image/pic/progress.png?t=2018428)

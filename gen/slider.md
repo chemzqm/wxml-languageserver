@@ -1,4 +1,4 @@
-<!-- https://mp.weixin.qq.com/debug/wxadoc/dev/component/slider.html -->
+<!-- https://developers.weixin.qq.com/miniprogram/dev/component/slider.html -->
 
 #### slider
 
@@ -58,4 +58,4 @@
     Page(pageData)
     
 
-![slider](https://mp.weixin.qq.com/debug/wxadoc/dev/image/pic/slider.png?t=2018424)
+![slider](https://mp.weixin.qq.com/debug/wxadoc/dev/image/pic/slider.png?t=2018428)

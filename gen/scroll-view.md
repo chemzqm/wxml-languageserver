@@ -1,4 +1,4 @@
-<!-- https://mp.weixin.qq.com/debug/wxadoc/dev/component/scroll-view.html -->
+<!-- https://developers.weixin.qq.com/miniprogram/dev/component/scroll-view.html -->
 
 #### scroll-view
 
@@ -81,7 +81,7 @@
     })
     
 
-![scroll-view](https://mp.weixin.qq.com/debug/wxadoc/dev/image/pic/scroll-view.png?t=2018424)
+![scroll-view](https://mp.weixin.qq.com/debug/wxadoc/dev/image/pic/scroll-view.png?t=2018428)
 
 ##### Bug & Tip
 

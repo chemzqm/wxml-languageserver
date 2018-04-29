@@ -1,8 +1,8 @@
-<!-- https://mp.weixin.qq.com/debug/wxadoc/dev/component/audio.html -->
+<!-- https://developers.weixin.qq.com/miniprogram/dev/component/audio.html -->
 
 #### audio
 
-**注意：1.6.0 版本开始，该组件不再维护。建议使用能力更强的 [wx.createInnerAudioContext](https://mp.weixin.qq.com/debug/wxadoc/dev/api/createInnerAudioContext.html) 接口**
+**注意：1.6.0 版本开始，该组件不再维护。建议使用能力更强的 [wx.createInnerAudioContext](https://developers.weixin.qq.com/miniprogram/dev/api/createInnerAudioContext.html) 接口**
 
 音频。
 
@@ -70,6 +70,6 @@
     })
     
 
-![audio](https://mp.weixin.qq.com/debug/wxadoc/dev/image/pic/audio.png?t=2018424)
+![audio](https://mp.weixin.qq.com/debug/wxadoc/dev/image/pic/audio.png?t=2018428)
 
-相关api：[wx.createAudioContext](https://mp.weixin.qq.com/debug/wxadoc/dev/api/api-audio.html)
+相关api：[wx.createAudioContext](https://developers.weixin.qq.com/miniprogram/dev/api/api-audio.html)

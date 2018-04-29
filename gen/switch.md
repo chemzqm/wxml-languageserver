@@ -1,4 +1,4 @@
-<!-- https://mp.weixin.qq.com/debug/wxadoc/dev/component/switch.html -->
+<!-- https://developers.weixin.qq.com/miniprogram/dev/component/switch.html -->
 
 #### switch
 
@@ -31,7 +31,7 @@
     })
     
 
-![switch](https://mp.weixin.qq.com/debug/wxadoc/dev/image/pic/switch.png?t=2018424)
+![switch](https://mp.weixin.qq.com/debug/wxadoc/dev/image/pic/switch.png?t=2018428)
 
 ##### Tips
 

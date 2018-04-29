@@ -1,4 +1,4 @@
-<!-- https://mp.weixin.qq.com/debug/wxadoc/dev/component/view.html -->
+<!-- https://developers.weixin.qq.com/miniprogram/dev/component/view.html -->
 
 #### view
 
@@ -33,8 +33,8 @@
     </view>
     
 
-![view](https://mp.weixin.qq.com/debug/wxadoc/dev/image/pic/view.png?t=2018424)
+![view](https://mp.weixin.qq.com/debug/wxadoc/dev/image/pic/view.png?t=2018428)
 
 ##### Bug & Tip
 
-1.  `tip`: 如果需要使用滚动视图，请使用 [scroll-view](https://mp.weixin.qq.com/debug/wxadoc/dev/component/scroll-view.html)
+1.  `tip`: 如果需要使用滚动视图，请使用 [scroll-view](https://developers.weixin.qq.com/miniprogram/dev/component/scroll-view.html)

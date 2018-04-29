@@ -1,4 +1,4 @@
-<!-- https://mp.weixin.qq.com/debug/wxadoc/dev/component/icon.html -->
+<!-- https://developers.weixin.qq.com/miniprogram/dev/component/icon.html -->
 
 #### icon
 
@@ -47,4 +47,4 @@
     })
     
 
-![icon](https://mp.weixin.qq.com/debug/wxadoc/dev/image/pic/icon.png?t=2018424)
+![icon](https://mp.weixin.qq.com/debug/wxadoc/dev/image/pic/icon.png?t=2018428)

@@ -1,4 +1,4 @@
-<!-- https://mp.weixin.qq.com/debug/wxadoc/dev/component/text.html -->
+<!-- https://developers.weixin.qq.com/miniprogram/dev/component/text.html -->
 
 #### text
 
@@ -61,4 +61,4 @@
     })
     
 
-![text](https://mp.weixin.qq.com/debug/wxadoc/dev/image/pic/text.png?t=2018424)
+![text](https://mp.weixin.qq.com/debug/wxadoc/dev/image/pic/text.png?t=2018428)

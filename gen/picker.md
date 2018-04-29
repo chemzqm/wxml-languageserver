@@ -1,4 +1,4 @@
-<!-- https://mp.weixin.qq.com/debug/wxadoc/dev/component/picker.html -->
+<!-- https://developers.weixin.qq.com/miniprogram/dev/component/picker.html -->
 
 #### picker
 
@@ -286,4 +286,4 @@
     })
     
 
-![picker](https://mp.weixin.qq.com/debug/wxadoc/dev/image/pic/picker.png?t=2018424)
+![picker](https://mp.weixin.qq.com/debug/wxadoc/dev/image/pic/picker.png?t=2018428)

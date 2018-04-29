@@ -1,4 +1,4 @@
-<!-- https://mp.weixin.qq.com/debug/wxadoc/dev/component/video.html -->
+<!-- https://developers.weixin.qq.com/miniprogram/dev/component/video.html -->
 
 #### video
 
@@ -110,9 +110,9 @@
     })
     
 
-![video](https://mp.weixin.qq.com/debug/wxadoc/dev/image/pic/video.png?t=2018424)
+![video](https://mp.weixin.qq.com/debug/wxadoc/dev/image/pic/video.png?t=2018428)
 
-相关api：[wx.createVideoContext](https://mp.weixin.qq.com/debug/wxadoc/dev/api/api-video.html)
+相关api：[wx.createVideoContext](https://developers.weixin.qq.com/miniprogram/dev/api/api-video.html)
 
 ##### Bug & Tip
 

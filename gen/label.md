@@ -1,4 +1,4 @@
-<!-- https://mp.weixin.qq.com/debug/wxadoc/dev/component/label.html -->
+<!-- https://developers.weixin.qq.com/miniprogram/dev/component/label.html -->
 
 #### label
 
@@ -147,4 +147,4 @@
     }
     
 
-![label](https://mp.weixin.qq.com/debug/wxadoc/dev/image/pic/label.png?t=2018424)
+![label](https://mp.weixin.qq.com/debug/wxadoc/dev/image/pic/label.png?t=2018428)
