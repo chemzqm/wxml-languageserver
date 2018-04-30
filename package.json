@@ -41,10 +41,12 @@
   },
   "dependencies": {
     "log4js": "^2.5.3",
+    "merge": "^1.2.0",
     "typescript": "^2.8.3",
     "vscode-jsonrpc": "^3.6.1",
     "vscode-languageserver": "^4.1.2",
     "vscode-languageserver-protocol": "^3.7.1",
-    "vscode-languageserver-types": "^3.7.1"
+    "vscode-languageserver-types": "^3.7.1",
+    "yargs": "^11.0.0"
   }
 }

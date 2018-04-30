@@ -1,3 +1,57 @@
 #!/usr/bin/env node
-require('../lib/server.js')
 
+const yargs = require('yargs')
+const createServer = require('../lib/server').createServer
+const initializeLogging = require('../lib/utils/initializeLogging').default
+const connectionFromOptions = require('../lib/utils/connectionFromOptions').default
+
+const cli = yargs
+  .usage('wxml Language Service Command-Line Interface.\nUsage: $0 [args]')
+  .help('h')
+  .alias('h', 'help')
+  .option('stdio', {
+    describe: 'Use stdio to communicate with the server, default behaviour',
+    type: 'string',
+  })
+  .option('node-ipc', {
+    describe:
+      'Use node-ipc to communicate with the server. Useful for calling from a node.js client',
+    type: 'string',
+  })
+  .option('socket', {
+    describe:
+      'Use a socket (with a port number like --socket=5051) to communicate with the server',
+    type: 'number',
+  })
+
+const argv = cli.argv
+const options = {}
+const methods = ['node-ipc', 'stdio', 'socket']
+const method = methods.find(m => argv[m] != null)
+options.method = method
+
+if (options.method === 'socket') {
+  options.port = argv.socket
+  cliInvariant(options.port, '--socket option requires port.')
+}
+
+const connection = connectionFromOptions(options)
+initializeLogging(connection)
+
+createServer(connection).listen()
+
+// Exit the process when stream closes from remote end.
+process.stdin.on('close', () => {
+  process.exit(0)
+})
+
+function cliInvariant(condition, ...msgs) {
+  if (!condition) {
+    /* eslint-disable no-console */
+    console.error('ERROR:', ...msgs)
+    console.error()
+    /* eslint-enable */
+    cli.showHelp()
+    process.exit(1)
+  }
+}

@@ -76,7 +76,10 @@ suite('HTML Completion', () => {
     )
     let position = document.positionAt(offset)
     let wxmlDoc = parse(document.getText())
-    let list = doComplete(document, position, wxmlDoc)
+    let list = doComplete(document, position, wxmlDoc, {
+      useSnippet: true,
+      completeEvent: true
+    })
 
     // no duplicate labels
     let labels = list.items.map(i => i.label).sort()

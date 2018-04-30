@@ -4,6 +4,15 @@ Author Qiming Zhao <chemzqm@gmail> (https://github.com/chemzqm)
 *******************************************************************/
 'use strict'
 
+export interface CompletionConfig {
+  useSnippet: boolean
+  completeEvent: boolean
+}
+
+export interface WXMLConfig {
+  complete: CompletionConfig
+}
+
 export enum TokenType {
   StartCommentTag,
   Comment,

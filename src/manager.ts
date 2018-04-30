@@ -10,6 +10,7 @@ import {WXMLDocument} from './parser/wxmlParser'
 import doDiagnostic from './services/wxmlDiagnostic'
 import doComplete from './services/wxmlComplete'
 import doHover from './services/wxmlHover'
+import {WXMLConfig} from './wxmlLanguageTypes'
 
 interface WXMLDocumentCache {
   [uri: string]: WXMLDocument
@@ -24,10 +25,21 @@ export interface Manager {
   doDiagnostic(document: TextDocument):Diagnostic[]
   doHover(document: TextDocument, position: Position): Hover | null
   doComplete(document: TextDocument, position: Position):CompletionList
+  setConfig(obj: object): void
 }
 
 export function getManager():Manager {
+  let config: WXMLConfig = {
+    complete: {
+      useSnippet: false,
+      completeEvent: true
+    }
+  }
+
   return {
+    setConfig(obj: WXMLConfig):void {
+      config = Object.assign(config, obj)
+    },
     getWxmlDocument(document: TextDocument): WXMLDocument {
       let {uri} = document
       let doc = cache[uri]
@@ -53,7 +65,7 @@ export function getManager():Manager {
     },
     doComplete(document: TextDocument, position: Position):CompletionList {
       let doc = this.getWxmlDocument(document)
-      return doComplete(document, position, doc)
+      return doComplete(document, position, doc, config.complete)
     }
   }
 }

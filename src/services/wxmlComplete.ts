@@ -29,13 +29,17 @@ import {
   Node
 } from '../parser/wxmlParser'
 import {entities} from '../parser/htmlEntities'
+import {CompletionConfig} from '../wxmlLanguageTypes'
 import {isLetterOrDigit, endsWith} from '../utils/strings'
 
 export default function doComplete(
   document: TextDocument,
   position: Position,
-  htmlDocument: WXMLDocument,
+  wxmlDocument: WXMLDocument,
+  config: CompletionConfig
 ): CompletionList {
+  // const logger = getLogger('complete')
+  // logger.debug(String(nameEnd))
   let result: CompletionList = {
     isIncomplete: false,
     items: [],
@@ -45,9 +49,8 @@ export default function doComplete(
   let text = document.getText()
   let offset = document.offsetAt(position)
 
-  let node = htmlDocument.findNodeBefore(offset)
+  let node = wxmlDocument.findNodeBefore(offset)
   if (!node) return result
-
   let scanner = createScanner(text, node.start)
   let currentTag = ''
   let currentAttributeName: string
@@ -109,6 +112,7 @@ export default function doComplete(
       ScannerState.WithinEndTag,
       TokenType.EndTagClose,
     ) ? '' : '>'
+
     let curr: Node | undefined = node
     if (inOpenTag) {
       curr = curr.parent // don't suggest the own tag, it's not yet open
@@ -198,13 +202,15 @@ export default function doComplete(
         // < is a valid attribute name character, but we rather assume the attribute name ends. See #23236.
         replaceEnd++
       }
-      let range = getReplaceRange(nameStart, replaceEnd)
-      let value = isFollowedBy(
+      let isSnippet = !isFollowedBy(
         text,
         nameEnd,
         ScannerState.AfterAttributeName,
         TokenType.DelimiterAssign,
-      ) ? '' : '="$1"'
+      ) && config.useSnippet
+      let range = getReplaceRange(nameStart, replaceEnd)
+
+      let value = isSnippet ? '="$1"' : ''
       let seenAttributes = Object.create(null)
       for (let attr of node.attributeNames) {
         seenAttributes[attr] = true
@@ -215,18 +221,20 @@ export default function doComplete(
         seenAttributes[attribute] = true
         if (/^(bind|catch):/.test(attribute)) {
           seenAttributes[attribute.replace(':', '')] = true
+          if (config.completeEvent === false) return
         }
         if (/^\$/.test(tag) && /:/.test(attribute)) return
         let codeSnippet = attribute
         if (type !== 'boolean' && value.length) {
           codeSnippet = codeSnippet + value
         }
+
         result.items.push({
           label: attribute,
           documentation: info && info.desc ? info.desc.join('\n') : '',
-          kind: CompletionItemKind.Property,
+          kind: isSnippet ? CompletionItemKind.Snippet : CompletionItemKind.Property,
           textEdit: TextEdit.replace(range, codeSnippet),
-          insertTextFormat: InsertTextFormat.Snippet
+          insertTextFormat: isSnippet ? InsertTextFormat.Snippet : InsertTextFormat.PlainText
         })
       })
       return result
