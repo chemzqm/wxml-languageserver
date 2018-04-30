@@ -225,16 +225,17 @@ export default function doComplete(
         }
         if (/^\$/.test(tag) && /:/.test(attribute)) return
         let codeSnippet = attribute
-        if (type !== 'boolean' && value.length) {
+        let useSnippet = isSnippet && type !== 'boolean'
+        if (type !== 'boolean' && isSnippet) {
           codeSnippet = codeSnippet + value
         }
 
         result.items.push({
           label: attribute,
           documentation: info && info.desc ? info.desc.join('\n') : '',
-          kind: isSnippet ? CompletionItemKind.Snippet : CompletionItemKind.Property,
+          kind: CompletionItemKind.Property,
           textEdit: TextEdit.replace(range, codeSnippet),
-          insertTextFormat: isSnippet ? InsertTextFormat.Snippet : InsertTextFormat.PlainText
+          insertTextFormat: useSnippet ? InsertTextFormat.Snippet : InsertTextFormat.PlainText
         })
       })
       return result
