@@ -21,9 +21,20 @@ export function createServer(connection: IConnection): { listen():void } {
   connection.onInitialize((params: InitializeParams): InitializeResult => {
     logger.info('server initialized')
     const initializationOptions = params.initializationOptions
-    logger.debug(JSON.stringify(initializationOptions))
     if (initializationOptions) {
+      const {textDocument} = params.capabilities
       let {wxml} = initializationOptions
+      // make useSnippet false if client not support it
+      if (wxml
+        && wxml.complete
+        && textDocument
+        && textDocument.completion
+        && textDocument.completion.completionItem
+        && textDocument.completion.completionItem.snippetSupport === false) {
+        // the client said no snippet
+        wxml.complete.useSnippet = false
+      }
+      logger.debug(`Config: ${JSON.stringify(wxml)}`)
       if (wxml) manager.setConfig(wxml)
     }
     documents.onDidClose(e => {
