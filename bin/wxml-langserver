@@ -40,11 +40,6 @@ initializeLogging(connection)
 
 createServer(connection).listen()
 
-// Exit the process when stream closes from remote end.
-process.stdin.on('close', () => {
-  process.exit(0)
-})
-
 function cliInvariant(condition, ...msgs) {
   if (!condition) {
     /* eslint-disable no-console */
