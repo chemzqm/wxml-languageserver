@@ -5,17 +5,44 @@ import {
   InitializeResult,
 } from 'vscode-languageserver'
 import {IConnection} from 'vscode-languageserver'
+import {
+  DidChangeConfigurationParams,
+  MessageType
+} from 'vscode-languageserver-protocol'
 import {TextDocument, Diagnostic} from 'vscode-languageserver-types'
 import {getManager} from './manager'
 import {getLogger} from 'log4js'
+import uuid = require('uuid')
 
 export function createServer(connection: IConnection): { listen():void } {
   const logger = getLogger('server')
   const documents = new TextDocuments()
   const manager = getManager()
+  let shouldShutdown = false
 
   connection.onShutdown(() => {
-    logger.debug('LSP server connection shutting down')
+    shouldShutdown = true
+  })
+
+  process.on('exit', code => {
+    if (code !== 0) {
+      connection.sendNotification('window/showMessage', {
+        type: MessageType.Error,
+        message: `wxml language server abnormal exit with code ${code}`
+      })
+    }
+  })
+
+  connection.onExit(() => {
+    connection.sendNotification('window/showMessage', {
+      type: MessageType.Info,
+      message: 'wxml service exited'
+    })
+    if (shouldShutdown) {
+      process.exit()
+    } else {
+      process.exit(1)
+    }
   })
 
   connection.onInitialize((params: InitializeParams): InitializeResult => {
@@ -23,6 +50,8 @@ export function createServer(connection: IConnection): { listen():void } {
     const initializationOptions = params.initializationOptions
     if (initializationOptions) {
       const {textDocument} = params.capabilities
+      logger.debug(JSON.stringify(params))
+      // TODO it should only receive options of wxml
       let {wxml} = initializationOptions
       // make useSnippet false if client not support it
       if (wxml
@@ -50,18 +79,32 @@ export function createServer(connection: IConnection): { listen():void } {
       hoverProvider: true,
     }
 
+    connection.sendRequest('client/registerCapability', {
+      registrations: [{
+        id: uuid.v4(),
+        method: 'textDocument/didOpen',
+        documentSelector: [{pattern: '*.wxml'}]
+      }]
+    }).then(() => {
+    }, err => {
+      logger.error(err)
+    })
+
     return {capabilities}
   })
 
   // The settings have changed. Is send on server activation as well.
-  connection.onDidChangeConfiguration((change: any) => {
-    logger.debug(JSON.stringify(change.settings))
-    // let config = change.settings
-    // manager.setConfig(config)
+  connection.onDidChangeConfiguration((change: DidChangeConfigurationParams) => {
+    let config = change.settings
+    manager.setConfig(config)
   })
 
   const pendingValidationRequests: {[uri: string]: NodeJS.Timer} = {}
   const validationDelayMs = 100
+
+  documents.onDidOpen((change: TextDocumentChangeEvent) => {
+    triggerValidation(change.document)
+  })
 
   // When the text document first opened or when its content has changed.
   documents.onDidChangeContent((change: TextDocumentChangeEvent) => {
@@ -73,6 +116,7 @@ export function createServer(connection: IConnection): { listen():void } {
     cleanPendingValidation(event.document)
     connection.sendDiagnostics({uri: event.document.uri, diagnostics: []})
   })
+
   function cleanPendingValidation(textDocument: TextDocument): void {
     const request = pendingValidationRequests[textDocument.uri]
     if (request) {
@@ -101,7 +145,7 @@ export function createServer(connection: IConnection): { listen():void } {
   })
 
   connection.onCompletionResolve(item => {
-    // TODO maybe need to support resolve?
+    // TODO maybe need to support resolve, vim not supported
     return item
   })
 
