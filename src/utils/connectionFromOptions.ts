@@ -29,8 +29,8 @@ export default function connectionFromOptions(options: ConnOptions): IConnection
       let server = net
         .createServer(socket => {
           server.close()
-          socket.pipe(writer)
-          reader.pipe(socket)
+          socket.pipe(reader)
+          writer.pipe(socket)
         })
         .listen(options.port)
       break
