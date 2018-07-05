@@ -229,13 +229,20 @@ export default function doComplete(
         if (type !== 'boolean' && isSnippet) {
           codeSnippet = codeSnippet + value
         }
-
+        let command
+        if (useSnippet) {
+          command = {
+            title: 'Suggest',
+            command: 'editor.action.triggerSuggest'
+          }
+        }
         result.items.push({
           label: attribute,
           documentation: info && info.desc ? info.desc.join('\n') : '',
-          kind: CompletionItemKind.Property,
+          kind:  CompletionItemKind.Property,
           textEdit: TextEdit.replace(range, codeSnippet),
-          insertTextFormat: useSnippet ? InsertTextFormat.Snippet : InsertTextFormat.PlainText
+          insertTextFormat: useSnippet ? InsertTextFormat.Snippet : InsertTextFormat.PlainText,
+          command
         })
       })
       return result

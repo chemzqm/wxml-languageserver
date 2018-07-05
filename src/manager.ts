@@ -25,7 +25,7 @@ export interface Manager {
   doDiagnostic(document: TextDocument):Diagnostic[]
   doHover(document: TextDocument, position: Position): Hover | null
   doComplete(document: TextDocument, position: Position):CompletionList
-  setConfig(obj: object): void
+  setConfig(obj: WXMLConfig): void
 }
 
 export function getManager():Manager {

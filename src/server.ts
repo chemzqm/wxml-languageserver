@@ -3,16 +3,16 @@ import {
   TextDocumentChangeEvent,
   InitializeParams,
   InitializeResult,
+  ServerCapabilities,
 } from 'vscode-languageserver'
 import {IConnection} from 'vscode-languageserver'
 import {
   DidChangeConfigurationParams,
-  MessageType
+  MessageType,
 } from 'vscode-languageserver-protocol'
 import {TextDocument, Diagnostic} from 'vscode-languageserver-types'
 import {getManager} from './manager'
 import {getLogger} from 'log4js'
-import uuid = require('uuid')
 
 export function createServer(connection: IConnection): { listen():void } {
   const logger = getLogger('server')
@@ -47,48 +47,36 @@ export function createServer(connection: IConnection): { listen():void } {
 
   connection.onInitialize((params: InitializeParams): InitializeResult => {
     logger.info('server initialized')
+    let snippetSupport = false
     const initializationOptions = params.initializationOptions
     if (initializationOptions) {
       const {textDocument} = params.capabilities
-      logger.debug(JSON.stringify(params))
-      // TODO it should only receive options of wxml
-      let {wxml} = initializationOptions
-      // make useSnippet false if client not support it
-      if (wxml
-        && wxml.complete
-        && textDocument
+      if (textDocument 
         && textDocument.completion
         && textDocument.completion.completionItem
-        && textDocument.completion.completionItem.snippetSupport === false) {
-        // the client said no snippet
-        wxml.complete.useSnippet = false
+        && textDocument.completion.completionItem.snippetSupport) {
+        snippetSupport = true
       }
-      logger.debug(`Config: ${JSON.stringify(wxml)}`)
-      if (wxml) manager.setConfig(wxml)
     }
+    manager.setConfig({
+      complete: {
+        completeEvent: true,
+        useSnippet: snippetSupport
+      }
+    })
     documents.onDidClose(e => {
       manager.removeDocument(e.document.uri)
     })
 
-    const capabilities = {
+    const capabilities:ServerCapabilities = {
       // Tell the client that the server works in FULL text document sync mode
       textDocumentSync: documents.syncKind,
       completionProvider: {
+        triggerCharacters: ['<'],
         resolveProvider: false,
       },
       hoverProvider: true,
     }
-
-    connection.sendRequest('client/registerCapability', {
-      registrations: [{
-        id: uuid.v4(),
-        method: 'textDocument/didOpen',
-        documentSelector: [{pattern: '*.wxml'}]
-      }]
-    }).then(() => {
-    }, err => {
-      logger.error(err)
-    })
 
     return {capabilities}
   })
@@ -145,7 +133,6 @@ export function createServer(connection: IConnection): { listen():void } {
   })
 
   connection.onCompletionResolve(item => {
-    // TODO maybe need to support resolve, vim not supported
     return item
   })
 

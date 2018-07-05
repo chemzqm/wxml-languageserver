@@ -15,27 +15,27 @@
 
     npm install -g wxml-langserver
 
-以 vim/neovim 为例， 安装 [autozimu/LanguageClient-neovim](https://github.com/autozimu/LanguageClient-neovim) 插件：
 
-```vim
-Plug 'autozimu/LanguageClient-neovim', {
-    \ 'branch': 'next',
-    \ 'do': 'bash install.sh',
-    \ }
+启动参数：
 
-Plug 'Shougo/deoplete.nvim', { 'do': ':UpdateRemotePlugins' }
+```
+  --stdio     Use stdio to communicate with the server, default behaviour
+  --node-ipc  Use node-ipc to communicate with the server. Useful for calling
+  --socket    Use a socket (with a port number like --socket=5051) to
+              communicate with the server
 ```
 
-配置：
+[coc.nvim](https://github.com/neoclide/coc.nvim) 已集成本插件，推荐使用。
 
-```vim
-let g:LanguageClient_serverCommands = {
-    \ 'wxml': ['wxml-langserver'],
-    \ }
+## 配置
 
-nnoremap <silent> K :call LanguageClient#textDocument_hover()<CR>
-nnoremap <silent> gd :call LanguageClient#textDocument_definition()<CR>
-```
+Client 可发送 `workspace/didChangeConfiguration` 通知来进行配置，支持配置项：
+
+* `complete`
+
+  * `useSnippet` 是否启用 snippet，默认通过 Client 声明的 snippet 支持判定
+  * `completeEvent` 是否包含 event 补全，默认为 true
+
 
 ## 本地使用
 

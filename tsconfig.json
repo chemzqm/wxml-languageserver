@@ -6,6 +6,7 @@
     "module": "commonjs",
     "moduleResolution": "node",
     "lib": ["es2016"],
+    "pretty": true,
     "sourceMap": true,
     "declaration": true,
     "strictNullChecks": true,
