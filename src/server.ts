@@ -12,10 +12,8 @@ import {
 } from 'vscode-languageserver-protocol'
 import {TextDocument, Diagnostic} from 'vscode-languageserver-types'
 import {getManager} from './manager'
-import {getLogger} from 'log4js'
 
 export function createServer(connection: IConnection): { listen():void } {
-  const logger = getLogger('server')
   const documents = new TextDocuments()
   const manager = getManager()
   let shouldShutdown = false
@@ -46,7 +44,6 @@ export function createServer(connection: IConnection): { listen():void } {
   })
 
   connection.onInitialize((params: InitializeParams): InitializeResult => {
-    logger.info('server initialized')
     let snippetSupport = false
     const initializationOptions = params.initializationOptions
     if (initializationOptions) {

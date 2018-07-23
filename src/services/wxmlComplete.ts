@@ -38,8 +38,6 @@ export default function doComplete(
   wxmlDocument: WXMLDocument,
   config: CompletionConfig
 ): CompletionList {
-  // const logger = getLogger('complete')
-  // logger.debug(String(nameEnd))
   let result: CompletionList = {
     isIncomplete: false,
     items: [],

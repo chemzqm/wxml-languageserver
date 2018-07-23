@@ -83,7 +83,7 @@ suite('HTML Completion', () => {
 
     // no duplicate labels
     let labels = list.items.map(i => i.label).sort()
-    let previous = null
+    let previous:any = null
     for (let label of labels) {
       assert.ok(
         previous !== label,

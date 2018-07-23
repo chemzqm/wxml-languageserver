@@ -31,8 +31,6 @@ if (options.method === 'socket') {
   cliInvariant(options.port, '--socket option requires port.')
 }
 
-console.log(options)
-
 const connection = connectionFromOptions(options)
 console.log = connection.console.log.bind(connection.console)
 console.error = connection.console.error.bind(connection.console)
@@ -48,3 +46,6 @@ function cliInvariant(condition, ...msgs) {
     process.exit(1)
   }
 }
+
+process.on('uncaughtException', e => console.error('uncaughtException:' + e.message))
+process.on('unhandledRejection', e => console.error('unhandledRejection:' + e.message))

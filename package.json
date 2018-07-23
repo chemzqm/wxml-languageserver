@@ -1,6 +1,6 @@
 {
   "name": "wxml-langserver",
-  "version": "2.0.2",
+  "version": "2.0.3",
   "description": "wxml language server implementation in nodejs",
   "main": "index.js",
   "author": "Qiming Zhao <chemzqm@gmail.com>",
@@ -46,7 +46,6 @@
     "@types/uuid": "^3.4.3"
   },
   "dependencies": {
-    "log4js": "^3.0.2",
     "merge": "^1.2.0",
     "uuid": "^3.3.2",
     "vscode-jsonrpc": "^3.6.2",

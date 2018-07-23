@@ -34,8 +34,8 @@ export default function doHover(
 
   function getTagHover(tag: string, range: Range): Hover | null {
     tag = tag.toLowerCase()
-    let hover = null
-    provider.collectTags((t, label) => {
+    let hover:any = null
+    provider.collectTags((t, _label) => {
       if (t === tag) {
         let file = path.join(BASE_DIR, `gen/${tag}.md`)
         if (fs.existsSync(file)) {
