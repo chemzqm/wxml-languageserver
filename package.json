@@ -22,12 +22,12 @@
   },
   "devDependencies": {
     "@chemzqm/tsconfig": "^0.0.2",
-    "@chemzqm/tslint-config": "1.0.13",
+    "@chemzqm/tslint-config": "1.0.15",
     "@minapp/generator": "^1.1.0",
     "@types/chai": "^4.1.4",
     "@types/chai-as-promised": "^7.1.0",
-    "@types/mocha": "^5.2.4",
-    "@types/node": "^10.5.1",
+    "@types/mocha": "^5.2.5",
+    "@types/node": "^10.5.2",
     "chai": "^4.1.2",
     "chai-as-promised": "^7.1.1",
     "glob": "^7.1.2",
@@ -39,20 +39,19 @@
     "prettier": "^1.13.7",
     "rimraf": "^2.6.2",
     "source-map-support": "^0.5.6",
-    "tslint": "^5.10.0",
+    "tslint": "^5.11.0",
     "tslint-language-service": "^0.9.9",
-    "turndown": "^4.0.2"
+    "turndown": "^4.0.2",
+    "typescript": "^2.9.2",
+    "@types/uuid": "^3.4.3"
   },
   "dependencies": {
-    "@types/uuid": "^3.4.3",
-    "log4js": "^2.10.0",
+    "log4js": "^3.0.2",
     "merge": "^1.2.0",
-    "typescript": "^2.9.2",
     "uuid": "^3.3.2",
     "vscode-jsonrpc": "^3.6.2",
-    "vscode-languageserver": "^4.2.1",
-    "vscode-languageserver-protocol": "^3.8.1",
-    "vscode-languageserver-types": "^3.8.2",
-    "yargs": "^12.0.1"
+    "vscode-languageserver": "^4.3.0",
+    "vscode-languageserver-protocol": "^3.9.0",
+    "vscode-languageserver-types": "^3.9.0"
   }
 }
