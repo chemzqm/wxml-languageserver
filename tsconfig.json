@@ -13,10 +13,6 @@
     "strictFunctionTypes": false,
     "strictPropertyInitialization": false,
     "plugins": []
-  },
-  "include": [
-    "bin/wxml-langserver",
-    "src/**/*.ts"
-  ]
+  }
 }
 
