@@ -3,9 +3,11 @@ MIT License http://www.opensource.org/licenses/mit-license.php
 Author Qiming Zhao <chemzqm@gmail> (https://github.com/chemzqm)
 *******************************************************************/
 'use strict'
-import { TextDocument,
+import {
+  TextDocument,
   DiagnosticSeverity,
-  Diagnostic} from 'vscode-languageserver-types'
+  Diagnostic
+} from 'vscode-languageserver-types'
 import {
   WXMLDocument,
   Node
@@ -14,7 +16,8 @@ import {
   isSubAttrTag,
   getWXMLTagProvider,
   EMPTY_ELEMENTS,
-  WXMLAttribute} from '../parser/wxmlTags'
+  WXMLAttribute
+} from '../parser/wxmlTags'
 import path = require('path')
 import fs = require('fs')
 
@@ -23,13 +26,13 @@ interface AttributeItem {
   info?: WXMLAttribute,
 }
 
-function isDynamicValue(value: string):boolean {
+function isDynamicValue(value: string): boolean {
   return /^\{\{.+\}\}$/.test(value)
 }
 
-function isNumberValue(value: string):boolean {
+function isNumberValue(value: string): boolean {
   if (!value) return true
-  return /^\d+(?:\.\d+)?$/.test(value)
+  return /^-?\d+(?:\.\d+)?$/.test(value)
 }
 
 export default function doDiagnostic(document: TextDocument, wxmlDocument: WXMLDocument): Diagnostic[] {
@@ -52,7 +55,7 @@ export default function doDiagnostic(document: TextDocument, wxmlDocument: WXMLD
     globalTags.push(name)
   })
   let uri = document.uri
-  function iterate(node: Node):void {
+  function iterate(node: Node): void {
     let tag = node.tag
     if (tag == null) return
     if (EMPTY_ELEMENTS.indexOf(tag) !== -1 && !node.isEmpty) {
@@ -117,7 +120,7 @@ export default function doDiagnostic(document: TextDocument, wxmlDocument: WXMLD
     }
     if (globalTags.indexOf(tag) !== -1) {
       let attributes = node.attributeNames
-      let allowedAttrs: {[index: string]: AttributeItem} = {}
+      let allowedAttrs: { [index: string]: AttributeItem } = {}
       provider.collectAttributes(tag, (name, type, info) => {
         allowedAttrs[name] = {
           type: type || 'string',
@@ -157,7 +160,7 @@ export default function doDiagnostic(document: TextDocument, wxmlDocument: WXMLD
         if (attr === 'wx:else') {
           if (value) {
             result.push({
-              range:{
+              range: {
                 start: document.positionAt(offset),
                 end: document.positionAt(offset + attr.length)
               },
@@ -176,7 +179,7 @@ export default function doDiagnostic(document: TextDocument, wxmlDocument: WXMLD
           case 'function':
             if (!value) {
               result.push({
-                range:{
+                range: {
                   start: document.positionAt(offset),
                   end: document.positionAt(offset + attr.length)
                 },
@@ -185,7 +188,7 @@ export default function doDiagnostic(document: TextDocument, wxmlDocument: WXMLD
               })
             } else if (['wx:for', 'wx:for-items'].indexOf(attr) !== -1) {
               result.push({
-                range:{
+                range: {
                   start: document.positionAt(offset),
                   end: document.positionAt(offset + attr.length)
                 },
